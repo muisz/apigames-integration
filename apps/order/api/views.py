@@ -1,3 +1,4 @@
+import uuid
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -8,6 +9,8 @@ from apps.order.api.serializers import CreateOrderSerializer, DetailOrderSeriali
 from apps.order.enums import OrderStatus
 from apps.order.models import Order
 from apps.libs.payments import payment_gateway, CreateOrderParams
+from apps.product.models import Product
+from apps.payment.enums import PaymentMethod
 
 
 class OrderView(GenericViewSet):
@@ -32,6 +35,30 @@ class OrderView(GenericViewSet):
     
     def retrieve(self, request, order_id):
         order = self.get_object()
+        serializer = DetailOrderSerializer(order, context=self.get_serializer_context())
+        return Response(serializer.data)
+    
+    @action(methods=['post', 'get'], detail=False, permission_classes=())
+    def stub(self, request):
+        order = None
+        if request.method == 'POST':
+            order_id = request.data.get('order_id')
+            transaction_id = uuid.uuid4()
+            order = Order.objects.create(
+                name='Order',
+                product=Product.objects.first(),
+                quantity=1,
+                amount=0,
+                payment_method=PaymentMethod.VA_BNI,
+                status=OrderStatus.Pending,
+                order_id=order_id,
+                transaction_id=transaction_id,
+            )
+        elif request.method == 'GET':
+            order_id = request.query_params.get('order_id')
+            order = Order.objects.filter(order_id=order_id).first()
+        if order is None:
+            raise NotFound()
         serializer = DetailOrderSerializer(order, context=self.get_serializer_context())
         return Response(serializer.data)
 
