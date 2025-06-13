@@ -38,6 +38,11 @@ CSRF_TRUSTED_ORIGINS = [
     for host in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', default='').split(',')
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    str(host).strip()
+    for host in os.environ.get('DJANGO_CORS_ORIGINS', default='').split(',')
+]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'oauth2_provider',
     'drf_standardized_errors',
+    'corsheaders',
 
     'apps.user',
     'apps.product',
@@ -59,6 +65,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
