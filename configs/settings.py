@@ -54,6 +54,8 @@ INSTALLED_APPS = [
 
     'apps.user',
     'apps.product',
+    'apps.payment',
+    'apps.order',
 ]
 
 MIDDLEWARE = [
@@ -155,7 +157,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'drf_standardized_errors.handler.exception_handler',
-    'DEFAULT_PERMISSIONS-CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     )
 }
+
+MIDTRANS_IS_PRODUCTION = os.environ.get('MIDTRANS_IS_PRODUCTION', default='False') == 'True'
+MIDTRANS_CLIENT_ID = os.environ.get('MIDTRANS_CLIENT_ID', default='')
+MIDTRANS_SERVER_KEY = os.environ.get('MIDTRANS_SERVER_KEY', default='')

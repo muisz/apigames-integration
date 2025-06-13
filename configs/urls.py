@@ -22,4 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include(oauth2_urls)),
     path('', include('apps.product.api.urls', namespace='api.product')),
+    path('', include('apps.payment.api.urls', namespace='api.payment')),
+    path('', include('apps.order.api.urls', namespace='api.order')),
 ]
