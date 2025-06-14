@@ -43,17 +43,16 @@ class OrderView(GenericViewSet):
         order = None
         if request.method == 'POST':
             order_id = request.data.get('order_id')
-            transaction_id = uuid.uuid4()
-            order = Order.objects.create(
-                name='Order',
-                product=Product.objects.first(),
+            product_id = request.data.get('product_id')
+            payment_method = request.data.get('payment_method')
+            product = Product.objects.filter(id=product_id).first()
+            params = CreateOrderParams(
+                product=product,
                 quantity=1,
-                amount=0,
-                payment_method=PaymentMethod.VA_BNI,
-                status=OrderStatus.Pending,
-                order_id=order_id,
-                transaction_id=transaction_id,
+                payment_method=payment_method,
+                order_destination=order_id,
             )
+            order = payment_gateway.make_payment(params)
         elif request.method == 'GET':
             order_id = request.query_params.get('order_id')
             order = Order.objects.filter(order_id=order_id).first()
