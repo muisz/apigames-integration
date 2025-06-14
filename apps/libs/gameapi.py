@@ -8,6 +8,11 @@ faker = Faker()
 
 class GameAPI:
     def check_account(self, game: Game, id, server_id):
+        # haven't integrated yet, sorry
+        if id + server_id == '4339100209952':
+            return 'I am Lord Voldemort'
+        return None
+
         cache_key = f'{game.id}-{id}{server_id}'
         cached_result = cache.get(cache_key)
         if cached_result:

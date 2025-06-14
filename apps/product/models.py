@@ -5,6 +5,7 @@ from apps.utils.models import BaseModel
 
 class Game(BaseModel):
     name = models.CharField(max_length=100)
+    image = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.name

@@ -10,11 +10,13 @@ from apps.libs.gameapi import game_api
 
 
 class GameView(GenericViewSet):
+    permission_classes = ()
+
     def get_queryset(self):
-        return Game.objects.filter(deleted_at__isnull=True).order_by('name')
+        return Game.objects.filter(deleted_at__isnull=True).order_by('id')
 
     def list(self, request):
-        queryset = self.get_queryset().values('id', 'name')
+        queryset = self.get_queryset().values('id', 'name', 'image')
         return Response(queryset)
     
     @action(methods=['get'], detail=True)

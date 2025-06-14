@@ -5,6 +5,8 @@ from apps.payment.enums import PaymentMethod
 
 
 class ListPaymentMethod(ListAPIView):
+    permission_classes = ()
+
     def list(self, request):
         payment_methods = [{'id': enum[0], 'name': enum[1]} for enum in PaymentMethod.CHOICES]
         return Response(payment_methods)
